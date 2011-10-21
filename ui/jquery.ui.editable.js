@@ -163,10 +163,16 @@ $.widget( "ui.editable", {
 			value: newValue
 		};
 
-		if ( this._trigger( "submit", event, hash ) !== false && this.value() !== newValue && this._trigger( "change", event, hash ) !== false ) {
-			this.value( newValue );
-			this._show();
+		if ( this._trigger( "submit", event, hash ) === false ) {
+			return;
 		}
+		if ( this.value() !== newValue ) {
+			if ( this._trigger( "change", event, hash ) === false ) {
+				return;
+			}
+			this.value( newValue );
+		}
+		this._show();
 	},
 
 	_cancel: function( event ) {
