@@ -35,6 +35,7 @@ $.widget( "ui.editable", {
 
 	options: {
 		value: null,
+		event: "click",
 		editor: "text",
 		buttons: "outside",
 		save: {
@@ -63,9 +64,13 @@ $.widget( "ui.editable", {
 	},
 
 	_create: function() {
+		var custom_events = {};
 		if ( this.value( this.options.value ) || !this.value( $.trim( this.element.text() ) ) ) {
 			this._show();
 		}
+		// First bind custom_events, then this._events. Changing that order may cause problems (_start must precede _events[click] when this.options.event is click).
+		custom_events[this.options.event] = "_start";
+		this._bind( custom_events );
 		this._bind( this._events );
 		this.element.addClass( editableClass );
 	},
@@ -73,21 +78,13 @@ $.widget( "ui.editable", {
 	_events: {
 		click: function( event ) {
 			var $this = $( event.target );
-			
-			if ( !this._editing ) {
-				this.element.removeClass( highlightStateClass );
-				this._edit();
-				return;
-			}
-
+		
+			if ( !this._editing ) {}
 			else if ( $this.hasClass( saveClass ) || $this.parent().hasClass( saveClass ) ) {
 				this.submit();
-				return;
 			}
-
 			else if ( $this.hasClass( cancelClass ) || $this.parent().hasClass( cancelClass ) ) {
 				this._cancel( event );
-				return false;
 			}
 		},
 		mouseenter: function( event ) {
@@ -97,6 +94,13 @@ $.widget( "ui.editable", {
 		},
 		mouseleave: function( event ) {
 			this.element.removeClass( highlightStateClass );
+		}
+	},
+	
+	_start: function( event ) {
+		if ( !this._editing ) {
+			this.element.removeClass( highlightStateClass );
+			this._edit();
 		}
 	},
 
