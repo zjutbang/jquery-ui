@@ -82,9 +82,11 @@ $.widget( "ui.editable", {
 			if ( !this._editing ) {}
 			else if ( $this.hasClass( saveClass ) || $this.parent().hasClass( saveClass ) ) {
 				this.submit();
+				return false;
 			}
 			else if ( $this.hasClass( cancelClass ) || $this.parent().hasClass( cancelClass ) ) {
 				this._cancel( event );
+				return false;
 			}
 		},
 		mouseenter: function( event ) {
