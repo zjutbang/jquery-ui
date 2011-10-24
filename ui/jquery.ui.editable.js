@@ -80,11 +80,11 @@ $.widget( "ui.editable", {
 			var $this = $( event.target );
 		
 			if ( !this._editing ) {}
-			else if ( $this.hasClass( saveClass ) ) {
+			else if ( $this.hasClass( saveClass ) || $this.parent().hasClass( saveClass ) ) {
 				this.submit();
 				return false;
 			}
-			else if ( $this.hasClass( cancelClass ) ) {
+			else if ( $this.hasClass( cancelClass ) || $this.parent().hasClass( cancelClass ) ) {
 				this._cancel( event );
 				return false;
 			}
@@ -228,7 +228,9 @@ $.ui.editable.cancelButtons = {
 		return $( "<a></a>" )
 			.attr( "href", "#" )
 			.attr( "title", editable.options.cancel.text )
-			.html( editable.options.cancel.text );
+			.append( $( "<span></span>" )
+				.addClass( cancelIconClass )
+				.html( editable.options.cancel.text ));
 	}
 };
 
