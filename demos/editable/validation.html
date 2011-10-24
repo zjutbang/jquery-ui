@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" >
+	<title>jQuery UI Editable - Validation</title>
+	<link rel="stylesheet" href="../../themes/base/jquery.ui.all.css">
+	<script src="../../jquery-1.6.2.js"></script>
+	<script src="../../ui/jquery.ui.core.js"></script>
+	<script src="../../ui/jquery.ui.widget.js"></script>
+	<script src="../../ui/jquery.ui.button.js"></script>
+	<script src="../../ui/jquery.ui.editable.js"></script>
+	<link rel="stylesheet" href="../demos.css">
+	<style>
+	.ui-editable { font-weight: bold; color: blue; }
+	.demo p { font-size: 14px; }
+	.demo p span { display: inline-block; }
+	.demo #log { height: 100px; width: 300px; overflow: auto; padding:0.5em; color: #333; }
+	.demo #error { margin-top:-1em; margin-bottom:2em; color:red; }
+	</style>
+	<script>
+	$(function() {
+		var $log = $( "#log" ),
+			$error = $( "#error" );
+		function log( text ) {
+			$log.append( text + "<br/>" );
+		}
+
+		function isEven( value ) {
+			return value % 2 == 0;
+		}
+
+		function error( element, msg ) {
+			$error.html(msg + "!");
+			$( ".ui-widget-content", element ).addClass( "ui-state-error" );
+		}
+
+		function cleanError() {
+			$error.html("");
+		}
+
+		$( "#editable" )
+			.bind( "editsubmit", function( ev, ui ) {
+				log( "submit: " + ui.value );
+				cleanError();
+			})
+			.bind( "editchange", function( ev, ui ) {
+				if( isEven( ui.value ) ) {
+					log( "change: " + ui.value );
+				}
+				else {
+					log( "change: " + ui.value + " (aborted)" );
+					error( this, "Number needs to be even" );
+					return false;
+				}
+			})
+			.bind( "editcancel", function() {
+				log( "cancel" );
+				cleanError();
+			})
+			.editable();
+	});
+	</script>
+</head>
+<body>
+
+<div class="demo">
+
+<p>
+<span id="editable">2000</span> is an even number.
+</p>
+<div id="error"></div>
+
+<div class="ui-widget">
+Log:
+<div id="log" class="ui-widget-content ui-corner-all"></div>
+</div>
+
+</div><!-- End demo -->
+
+
+
+<div class="demo-description">
+<p>
+This demo shows how a submission can be aborted based on user validation of input value.
+</p>
+<p>
+Click at the number to edit it, try odd and even numbers to check it out.
+</p>
+<p>
+Save your changes by submiting (pressing Enter or clicking the save button).
+</p>
+<p>
+Abort your changes by pressing Esc or clicking the cancel button.
+</p>
+</div><!-- End demo-description -->
+
+</body>
+</html>
