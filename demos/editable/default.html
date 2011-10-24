@@ -11,28 +11,28 @@
 	<script src="../../ui/jquery.ui.editable.js"></script>
 	<link rel="stylesheet" href="../demos.css">
 	<style>
-    .demo p { font-size: 14px; }
-    .demo p span { display: inline-block; }
-    .demo .log { width:400px; padding:0.5em; border: 1px solid #000; background: #eee; color: #333; }
+	.demo p { font-size: 14px; }
+	.demo p span { display: inline-block; }
+	.demo #log { height: 100px; width: 300px; overflow: auto; padding:0.5em; color: #333; }
 	</style>
 	<script>
 	$(function() {
-        var $log = $( ".log" ).hide();
-        function log( text ) {
-            $log.show().append( text + "<br/>" );
-        }
+		var $log = $( "#log" );
+		function log( text ) {
+			$log.append( text + "<br/>" );
+		}
 
 		$( "#editable" )
-            .bind( "editsubmit", function( ev, ui ) {
-                log( "submit: " + ui.value );
-            })
-            .bind( "editchange", function( ev, ui ) {
-                log( "change: " + ui.value );
-            })
-            .bind( "editcancel", function() {
-                log( "cancel" );
-            })
-            .editable();
+			.bind( "editsubmit", function( ev, ui ) {
+				log( "submit: " + ui.value );
+			})
+			.bind( "editchange", function( ev, ui ) {
+				log( "change: " + ui.value );
+			})
+			.bind( "editcancel", function() {
+				log( "cancel" );
+			})
+			.editable();
 	});
 	</script>
 </head>
@@ -44,7 +44,10 @@
 Name: <b><span id="editable">John Doe</span></b>
 </p>
 
-<p class="log ui-corner-all"></p>
+<div class="ui-widget">
+Log:
+<div id="log" class="ui-widget-content ui-corner-all"></div>
+</div>
 
 </div><!-- End demo -->
 
