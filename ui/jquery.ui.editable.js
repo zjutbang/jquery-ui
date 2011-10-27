@@ -14,7 +14,7 @@
  */
 (function( $, undefined ) {
 
-var editableClass = "ui-editable",
+var editableClass = "ui-editable ui-widget",
 	formClass = "ui-editable-form",
 	buttonClass = "ui-editable-button",
 	cancelClass = "ui-editable-cancel",
@@ -23,7 +23,7 @@ var editableClass = "ui-editable",
 	saveClass = "ui-editable-save",
 	hoverableClass = "ui-widget-content ui-state-default ui-corner-all",
 
-	cancelIconClass = "ui-icon-cancel",
+	cancelIconClass = "ui-icon-closethick",
 	saveIconClass = "ui-icon-disk",
 
 	activeStateClass = "ui-state-active",
@@ -36,14 +36,21 @@ $.widget( "ui.editable", {
 	options: {
 		event: "click",
 		editor: "text",
-		buttons: "outside",
-		save: {
-			type: "button",
-			text: "Save"
-		},
-		cancel: {
-			type: "button",
-			text: "Cancel"
+		buttons: {
+			save: {
+				label: 'Save',
+				icons: {
+					primary: saveIconClass
+				},
+				text: false
+			},
+			cancel: {
+				label: 'Cancel',
+				icons: {
+					primary: cancelIconClass
+				},
+				text: false
+			},
 		},
 		placeholder: "Click to edit"
 	},
@@ -96,6 +103,17 @@ $.widget( "ui.editable", {
 		},
 		mouseleave: function( event ) {
 			this.element.removeClass( highlightStateClass );
+		},
+		keydown: function( event ) {
+			var keyCode = $.ui.keyCode;
+			switch ( event.keyCode ) {
+				case keyCode.ENTER:
+					this.submit();
+					return false;
+				case keyCode.ESCAPE:
+					this._cancel();
+					return false;
+			}
 		}
 	},
 	
@@ -126,31 +144,40 @@ $.widget( "ui.editable", {
 	_form: function() {
 		var editor = $.ui.editable.editors[ this.options.editor ],
 			form = $( "<form></form>" )
-			.addClass( formClass )
-			.append( $( "<span></span>" )
-				.append( editor.element( this )));
-		if ( this.options.buttons == "inside" ) {
-			this.frame = form;
-		}
-		else {
-			this.frame = $( "> span" , form );
-		}
+				.addClass( formClass ),
+			saveButton, cancelButton;
+		this.frame = form;
 		this._hoverable( this.frame.addClass( hoverableClass ) );
-		if( this.options.buttons && this.options.save ) {
-			form.append( this._saveButton() );
+		if( this.options.buttons && this.options.buttons.cancel ) {
+			cancelButton = this._cancelButton().appendTo( form );
 		}
-		if( this.options.buttons && this.options.cancel ) {
-			form.append( this._cancelButton() );
+		if( this.options.buttons && this.options.buttons.save ) {
+			saveButton = this._saveButton().appendTo( form );
 		}
+		if( saveButton && cancelButton ) {
+			saveButton.removeClass( "ui-corner-right" );
+		}
+		$( "<span></span>" )
+			.append( editor.element( this ) )
+			.appendTo( form );
 		return form;
 	},
 
 	_saveButton: function() {
-		return $.ui.editable.saveButtons[ this.options.save.type ]( this ).addClass( saveClass );
+		// Using A links, so it doesn't count on form tab order.
+		return $( "<a></a>" )
+			.button( this.options.buttons.save )
+			.removeClass( "ui-corner-all" )
+			.addClass( "ui-corner-right" )
+			.addClass( saveClass );
 	},
 
 	_cancelButton: function() {
-		return $.ui.editable.cancelButtons[ this.options.cancel.type ]( this ).addClass( cancelClass );
+		return $( "<a></a>" )
+			.button( this.options.buttons.cancel )
+			.removeClass( "ui-corner-all" )
+			.addClass( "ui-corner-right" )
+			.addClass( cancelClass );
 	},
 
 	_formEvents: function() {
@@ -194,46 +221,6 @@ $.widget( "ui.editable", {
 	}
 });
 
-$.ui.editable.saveButtons = {
-	button: function( editable ) {
-		return $( "<button></button>" )
-			.html( editable.options.save.text )
-			.button({
-				icons: {
-					primary: saveIconClass
-				},
-				text: false
-			});
-	},
-	submit: function( editable ) {
-		return $( "<input/>" )
-			.attr( "type", "submit" )
-			.val( editable.options.save.text )
-			.button();
-	}
-};
-
-$.ui.editable.cancelButtons = {
-	button: function( editable ) {
-		return $( "<button></button>" )
-			.html( editable.options.cancel.text )
-			.button({
-				icons: {
-					primary: cancelIconClass
-				},
-				text: false
-			});
-	},
-	link: function( editable ) {
-		return $( "<a></a>" )
-			.attr( "href", "#" )
-			.attr( "title", editable.options.cancel.text )
-			.append( $( "<span></span>" )
-				.addClass( cancelIconClass )
-				.html( editable.options.cancel.text ));
-	}
-};
-
 $.ui.editable.editors = {
 	text: {
 		element:function( editable ) {
@@ -250,14 +237,6 @@ $.ui.editable.editors = {
 				})
 				.blur( function() {
 					self.frame.removeClass( activeStateClass );
-				})
-				.bind( "keydown", function( event ) {
-					var keyCode = $.ui.keyCode;
-					switch ( event.keyCode ) {
-					case keyCode.ESCAPE:
-						self._cancel.call( self );
-						return true;
-					}
 				})
 				.focus();
 		},

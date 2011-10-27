@@ -11,43 +11,45 @@
 	<script src="../../ui/jquery.ui.editable.js"></script>
 	<link rel="stylesheet" href="../demos.css">
 	<style>
-    .demo p span { display: inline-block; }
-    .demo p span.sample { font-size: 14px; }
-    .demo p span.info { font-family:fixed, monospace; white-space:pre; margin-left:2em; padding:0.5em; border: 1px solid #000; background: #eee; color: #333; vertical-align: middle; }
+	.demo { display: inline-block; }
 	</style>
 	<script>
 	$(function() {
 		$( "#default" ).editable();
-		$( "#inside" ).editable({buttons: "inside"});
-		$( "#textual" ).editable({
-            save: {type: "submit", text: "Save"},
-            cancel: {type: "link", text: "Cancel"}
-        });
-		$( "#save-only" ).editable({
-            save: {type: "submit", text: "Save"},
-            cancel: null
-        });
 		$( "#cancel-only" ).editable({
-            save: null,
-            cancel: {type: "link", text: "Cancel"}
-        });
-		$( "#none" ).editable({buttons: null});
+			buttons: {
+				save: null,
+			}
+		});
+		$( "#textual" ).editable({
+			buttons: {
+				save: {
+					icons: false
+				},
+				cancel: {
+					icons: false
+				}
+			}
+		});
+		$( "#none" ).editable({
+			buttons: null
+		});
 
 		$( "#start-all" )
-            .button()
-            .click(function() {
-                $( ".sample" ).editable("start");
-            });
+			.button()
+			.click(function() {
+				$( ".sample" ).editable("start");
+			});
 		$( "#submit-all" )
-            .button()
-            .click(function() {
-                $( ".sample" ).editable("submit");
-            });
+			.button()
+			.click(function() {
+				$( ".sample" ).editable("submit");
+			});
 		$( "#cancel-all" )
-            .button()
-            .click(function() {
-                $( ".sample" ).editable("cancel");
-            });
+			.button()
+			.click(function() {
+				$( ".sample" ).editable("cancel");
+			});
 	});
 	</script>
 </head>
@@ -59,49 +61,20 @@
 <button id="submit-all">Submit all changes</button>
 <button id="cancel-all">Skip all changes</button>
 
-<h2>Outside vs. Inside</h2>
-
 <p>
-<span class="sample" id="default">John Doe</span>
-<span class="info">{buttons: "outside"} (default)</span>
+<span class="sample" id="default">Default buttons</span>
 </p>
 
 <p>
-<span class="sample" id="inside">John Doe</span>
-<span class="info">{buttons: "inside"}</span>
-</p>
-
-<h2>Textual buttons</h2>
-
-<p>
-<span class="sample" id="textual">John Doe</span>
-<span class="info">{
-    save: {type: "submit", text: "Save"},
-    cancel: {type: "link", text: "Cancel"}
-}</span>
+<span class="sample" id="cancel-only">Cancel button only</span>
 </p>
 
 <p>
-<span class="sample" id="save-only">John Doe</span>
-<span class="info">{
-    save: {type: "submit", text: "Save"},
-    cancel: null
-}</span>
+<span class="sample" id="textual">Textual buttons</span>
 </p>
 
 <p>
-<span class="sample" id="cancel-only">John Doe</span>
-<span class="info">{
-    save: null,
-    cancel: {type: "link", text: "Cancel"}
-}</span>
-</p>
-
-<h2>No buttons</h2>
-
-<p>
-<span class="sample" id="none">John Doe</span>
-<span class="info">{buttons: null}</span>
+<span class="sample" id="none">No buttons</span>
 </p>
 
 </div><!-- End demo -->
@@ -110,7 +83,7 @@
 
 <div class="demo-description">
 <p>
-Click at 'John Doe' text to edit it.
+Click at text to edit it.
 </p>
 <p>
 Save your changes by submiting (pressing Enter or clicking the save button).
