@@ -34,7 +34,6 @@ $.widget( "ui.editable", {
 	widgetEventPrefix: "edit",
 
 	options: {
-		value: null,
 		event: "click",
 		editor: "text",
 		buttons: "outside",
@@ -65,7 +64,8 @@ $.widget( "ui.editable", {
 
 	_create: function() {
 		var custom_events = {};
-		if ( this.value( this.options.value ) || !this.value( $.trim( this.element.text() ) ) ) {
+		if ( !this.value( $.trim( this.element.text() ) ) ) {
+			// Show placeholder if empty
 			this._show();
 		}
 		// First bind custom_events, then this._events. Changing that order may cause problems (_start must precede _events[click] when this.options.event is click).
