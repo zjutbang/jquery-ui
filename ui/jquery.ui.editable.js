@@ -132,6 +132,7 @@ $.widget( "ui.editable", {
 	_edit: function() {
 		this._editing = true;
 		this.element.html( this._form() );
+		this._adjustInputWidth();
 		this._formEvents();
 	},
 
@@ -157,10 +158,21 @@ $.widget( "ui.editable", {
 		if( saveButton && cancelButton ) {
 			saveButton.removeClass( "ui-corner-right" );
 		}
-		$( "<span></span>" )
+		$( "<div></div>" )
 			.append( editor.element( this ) )
 			.appendTo( form );
 		return form;
+	},
+
+	_adjustInputWidth: function() {
+		// Hack to make text input to behave just like a block level element.
+		// Ideally, css would handle this all.
+		// Can't use table-cell styles for IE6/7 compatibility.
+		var buttonsWidth = 0;
+		$( ".ui-button", this.frame ).each(function() {
+			buttonsWidth += $( this ).outerWidth();
+		});
+		$( "> div", this.frame ).css( "margin-right", buttonsWidth );
 	},
 
 	_saveButton: function() {
