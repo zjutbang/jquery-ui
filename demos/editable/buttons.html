@@ -18,16 +18,16 @@
 		$( "#default" ).editable();
 		$( "#cancel-only" ).editable({
 			buttons: {
-				save: null,
+				cancel: $.ui.editable.defaults.cancelButton
 			}
 		});
 		$( "#textual" ).editable({
 			buttons: {
 				save: {
-					icons: false
+					label: "Save"
 				},
 				cancel: {
-					icons: false
+					label: "Cancel"
 				}
 			}
 		});

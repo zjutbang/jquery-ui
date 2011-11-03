@@ -38,22 +38,6 @@ $.widget( "ui.editable", {
 	options: {
 		event: "click",
 		editor: "text",
-		buttons: {
-			save: {
-				label: 'Save',
-				icons: {
-					primary: saveIconClass
-				},
-				text: false
-			},
-			cancel: {
-				label: 'Cancel',
-				icons: {
-					primary: cancelIconClass
-				},
-				text: false
-			}
-		},
 		placeholder: "Click to edit"
 	},
 
@@ -77,13 +61,23 @@ $.widget( "ui.editable", {
 			// Show placeholder if empty
 			this._show();
 		}
+		this._getButtonOptions();
 		this._getEditorOptions();
-		this._buttonsPosition = "e";
 		// First bind custom_events, then this._events. Changing that order may cause problems (_start must precede _events[click] when this.options.event is click).
 		custom_events[this.options.event] = "_start";
 		this._bind( custom_events );
 		this._bind( this._events );
 		this.element.addClass( editableClass );
+	},
+
+	_getButtonOptions: function() {
+		this._buttonsPosition = "e";
+		if( typeof this.options.buttons === "undefined" ) {
+			this.options.buttons = {
+				save: $.ui.editable.defaults.saveButton,
+				cancel: $.ui.editable.defaults.cancelButton
+			};
+		}
 	},
 
 	_getEditorOptions: function() {
@@ -324,6 +318,23 @@ $.ui.editable.editors = {
 	},
 	select: $.noop,
 	spinner: $.noop 
+};
+
+$.ui.editable.defaults = {
+	saveButton: {
+		label: "Save",
+		icons: {
+			primary: saveIconClass
+		},
+		text: false
+	},
+	cancelButton: {
+		label: "Cancel",
+		icons: {
+			primary: cancelIconClass
+		},
+		text: false
+	}
 };
 
 })( jQuery );
