@@ -75,11 +75,25 @@ $.widget( "ui.editable", {
 			// Show placeholder if empty
 			this._show();
 		}
+		this._getEditorOptions();
 		// First bind custom_events, then this._events. Changing that order may cause problems (_start must precede _events[click] when this.options.event is click).
 		custom_events[this.options.event] = "_start";
 		this._bind( custom_events );
 		this._bind( this._events );
 		this.element.addClass( editableClass );
+	},
+
+	_getEditorOptions: function() {
+		if ( typeof this.options.editor === "string" ) {
+			this._editor = this.options.editor;
+			this._editorOptions = {};
+		}
+		else if ( typeof this.options.editor === "object" ) {
+			for(var i in this.options.editor) {
+				this._editor = i;
+				this._editorOptions = this.options.editor[i];
+			}
+		}
 	},
 
 	_events: {
@@ -143,7 +157,7 @@ $.widget( "ui.editable", {
 	},
 
 	_form: function() {
-		var editor = $.ui.editable.editors[ this.options.editor ],
+		var editor = $.ui.editable.editors[ this._editor ],
 			form = $( "<form></form>" )
 				.addClass( formClass ),
 			saveButton, cancelButton;
@@ -194,7 +208,7 @@ $.widget( "ui.editable", {
 
 	_formEvents: function() {
 		var self = this,
-			editor = $.ui.editable.editors[ self.options.editor ];
+			editor = $.ui.editable.editors[ this._editor ];
 		$( "form", this.element )
 			.submit( function( event ) {
 				self._save.call( self, event, editor.value( self, this ) );
