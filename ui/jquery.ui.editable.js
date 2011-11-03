@@ -81,15 +81,19 @@ $.widget( "ui.editable", {
 	},
 
 	_getEditorOptions: function() {
+		var i;
 		if ( typeof this.options.editor === "string" ) {
-			this._editor = this.options.editor;
+			this._editor = $.ui.editable.editors[ this.options.editor ];
 			this._editorOptions = {};
 		}
 		else if ( typeof this.options.editor === "object" ) {
-			for(var i in this.options.editor) {
-				this._editor = i;
+			for(i in this.options.editor) {
+				this._editor = $.ui.editable.editors[ i ];
 				this._editorOptions = this.options.editor[i];
 			}
+		}
+		if ( ! ( typeof this._editor === "object" && this._editor.element && this._editor.bind && this._editor.value ) ) {
+			throw "jQuery UI Editable: \"" + ( i || this.options.editor ) + "\" is an invalid editor.";
 		}
 	},
 
@@ -157,13 +161,12 @@ $.widget( "ui.editable", {
 	},
 
 	_form: function() {
-		var editor = $.ui.editable.editors[ this._editor ],
-			form = $( "<form></form>" ).addClass( formClass );
+		var form = $( "<form></form>" ).addClass( formClass );
 		this.frame = form;
 		this._hoverable( this.frame.addClass( hoverableClass ) );
 		$( "<div></div>" )
 			.addClass( inputAreaClass )
-			.append( editor.element( this ) )
+			.append( this._editor.element( this ) )
 			.appendTo( form );
 		if( this.options.buttons ) {
 			this._drawButtons().appendTo( form );
@@ -230,14 +233,13 @@ $.widget( "ui.editable", {
 	},
 
 	_formEvents: function() {
-		var self = this,
-			editor = $.ui.editable.editors[ this._editor ];
+		var self = this;
 		$( "form", this.element )
 			.submit( function( event ) {
-				self._save.call( self, event, editor.value( self, this ) );
+				self._save.call( self, event, self._editor.value( self, this ) );
 				return false;
 			});
-		editor.bind( this );
+		this._editor.bind( this );
 	},
 
 	_save: function( event, newValue ) {
