@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" >
+	<title>jQuery UI Editable - Editors</title>
+	<link rel="stylesheet" href="../../themes/base/jquery.ui.all.css">
+	<script src="../../jquery-1.6.2.js"></script>
+	<script src="../../ui/jquery.ui.core.js"></script>
+	<script src="../../ui/jquery.ui.widget.js"></script>
+	<script src="../../ui/jquery.ui.button.js"></script>
+	<script src="../../ui/jquery.ui.editable.js"></script>
+	<link rel="stylesheet" href="../demos.css">
+	<style>
+	.demo { display: inline-block; }
+	</style>
+	<script>
+	$(function() {
+		$( "#default" ).editable();
+		$( "#textarea" ).editable({
+			editor: "textarea",
+            buttons: {
+                save: {
+                    icons: false,
+                },
+                cancel: {
+                    icons: false,
+                }
+            }
+		});
+
+		$( "#start-all" )
+			.button()
+			.click(function() {
+				$( ".sample" ).editable("start");
+			});
+		$( "#submit-all" )
+			.button()
+			.click(function() {
+				$( ".sample" ).editable("submit");
+			});
+		$( "#cancel-all" )
+			.button()
+			.click(function() {
+				$( ".sample" ).editable("cancel");
+			});
+	});
+	</script>
+</head>
+<body>
+
+<div class="demo">
+
+<button id="start-all">Edit all</button>
+<button id="submit-all">Submit all changes</button>
+<button id="cancel-all">Skip all changes</button>
+
+<p>
+<span class="sample" id="default">Default editor</span>
+</p>
+
+<p class="sample" id="textarea">
+Textarea
+</p>
+
+</div><!-- End demo -->
+
+
+
+<div class="demo-description">
+<p>
+Click at text to edit it.
+</p>
+<p>
+Save your changes by submiting (pressing Enter or clicking the save button).
+</p>
+<p>
+Abort your changes by pressing Esc or clicking the cancel button.
+</p>
+</div><!-- End demo-description -->
+
+</body>
+</html>

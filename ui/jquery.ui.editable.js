@@ -17,8 +17,10 @@
 var editableClass = "ui-editable ui-widget",
 	formClass = "ui-editable-form",
 	buttonClass = "ui-editable-button",
+	buttonsAreaClass = "ui-editable-buttons-area",
 	cancelClass = "ui-editable-cancel",
 	inputClass = "ui-editable-input",
+	inputAreaClass = "ui-editable-input-area",
 	placeholderClass = "ui-editable-placeholder",
 	saveClass = "ui-editable-save",
 	hoverableClass = "ui-widget-content ui-state-default ui-corner-all",
@@ -50,7 +52,7 @@ $.widget( "ui.editable", {
 					primary: cancelIconClass
 				},
 				text: false
-			},
+			}
 		},
 		placeholder: "Click to edit"
 	},
@@ -76,6 +78,7 @@ $.widget( "ui.editable", {
 			this._show();
 		}
 		this._getEditorOptions();
+		this._buttonsPosition = "e";
 		// First bind custom_events, then this._events. Changing that order may cause problems (_start must precede _events[click] when this.options.event is click).
 		custom_events[this.options.event] = "_start";
 		this._bind( custom_events );
@@ -122,6 +125,9 @@ $.widget( "ui.editable", {
 			var keyCode = $.ui.keyCode;
 			switch ( event.keyCode ) {
 				case keyCode.ENTER:
+					if(this._skipEnterSubmit) {
+						break;
+					}
 					this.submit();
 					return false;
 				case keyCode.ESCAPE:
@@ -158,52 +164,75 @@ $.widget( "ui.editable", {
 
 	_form: function() {
 		var editor = $.ui.editable.editors[ this._editor ],
-			form = $( "<form></form>" )
-				.addClass( formClass ),
-			saveButton, cancelButton;
+			form = $( "<form></form>" ).addClass( formClass );
 		this.frame = form;
 		this._hoverable( this.frame.addClass( hoverableClass ) );
-		if( this.options.buttons && this.options.buttons.cancel ) {
-			cancelButton = this._cancelButton().appendTo( form );
-		}
-		if( this.options.buttons && this.options.buttons.save ) {
-			saveButton = this._saveButton().appendTo( form );
-		}
-		if( saveButton && cancelButton ) {
-			saveButton.removeClass( "ui-corner-right" );
-		}
 		$( "<div></div>" )
+			.addClass( inputAreaClass )
 			.append( editor.element( this ) )
 			.appendTo( form );
+		if( this.options.buttons ) {
+			this._drawButtons().appendTo( form );
+		}
 		return form;
 	},
 
+	_drawButtons: function( form ) {
+		var i, buttons = {}, ordered_buttons = $([]),
+			buttonsArea = $( "<div></div>" ).addClass( buttonsAreaClass );
+		for( i in this.options.buttons ) {
+			buttons[ i ] = this._drawButton[ i ]( this.options.buttons[ i ] )
+				.appendTo( buttonsArea );
+			ordered_buttons = ordered_buttons.add( buttons[ i ] );
+		}
+		if( /s/.test(this._buttonsPosition) ) {
+			buttonsArea.css({bottom: 0});
+		}
+		else {
+			buttonsArea.css({top: 0});
+		}
+		if( /e/.test(this._buttonsPosition) ) {
+			buttonsArea.css({right: 0});
+		}
+		else if( /w/.test(this._buttonsPosition) ) {
+			buttonsArea.css({left: 0});
+		}
+		return buttonsArea;
+	},
+
+	_drawButton: {
+		save: function( options ) {
+			// Using A links, so it doesn't count on form tab order.
+			return $( "<a></a>" )
+				.button( options )
+				.removeClass( "ui-corner-all" )
+				.addClass( saveClass );
+		},
+
+		cancel: function( options ) {
+			return $( "<a></a>" )
+				.button( options )
+				.removeClass( "ui-corner-all" )
+				.addClass( cancelClass );
+		}
+	},
+
 	_adjustInputWidth: function() {
-		// Hack to make text input to behave just like a block level element.
-		// Ideally, css would handle this all.
-		// Can't use table-cell styles for IE6/7 compatibility.
-		var buttonsWidth = 0;
-		$( ".ui-button", this.frame ).each(function() {
-			buttonsWidth += $( this ).outerWidth();
-		});
-		$( "> div", this.frame ).css( "margin-right", buttonsWidth );
-	},
-
-	_saveButton: function() {
-		// Using A links, so it doesn't count on form tab order.
-		return $( "<a></a>" )
-			.button( this.options.buttons.save )
-			.removeClass( "ui-corner-all" )
-			.addClass( "ui-corner-right" )
-			.addClass( saveClass );
-	},
-
-	_cancelButton: function() {
-		return $( "<a></a>" )
-			.button( this.options.buttons.cancel )
-			.removeClass( "ui-corner-all" )
-			.addClass( "ui-corner-right" )
-			.addClass( cancelClass );
+		var buttonsWidth, buttonsHeight, margin = {},
+			buttonsArea = $( "." + buttonsAreaClass, this.frame );
+		if( /n/.test(this._buttonsPosition) ) {
+			margin["margin-top"] = buttonsArea.outerHeight();
+		}
+		else if( /s/.test(this._buttonsPosition) ) {
+			margin["margin-bottom"] = buttonsArea.outerHeight();
+		}
+		else if( /e/.test(this._buttonsPosition) ) {
+			margin["margin-right"] = buttonsArea.outerWidth();
+		}
+		else if( /w/.test(this._buttonsPosition) ) {
+			margin["margin-left"] = buttonsArea.outerWidth();
+		}
+		$( "." + inputAreaClass, this.frame ).css( margin );
 	},
 
 	_formEvents: function() {
@@ -249,7 +278,7 @@ $.widget( "ui.editable", {
 
 $.ui.editable.editors = {
 	text: {
-		element:function( editable ) {
+		element: function( editable ) {
 			return $( "<input/>" )
 				.attr( "type", "text" )
 				.val( editable.value() )
@@ -270,7 +299,29 @@ $.ui.editable.editors = {
 			return $( "input", form ).val();
 		}
 	},
-	textarea: $.noop,
+	textarea: {
+		element: function( editable ) {
+			editable._skipEnterSubmit = true;
+			editable._buttonsPosition = "se";
+			return $( "<textarea></textarea>" )
+				.val( editable.value().replace(/<br>|<br\/>|<br \/>/gi, "\n") )
+				.addClass( inputClass );
+		},
+		bind: function( editable ) {
+			var self = editable;
+			$( "textarea", editable.element )
+				.focus( function() {
+					self.frame.addClass( activeStateClass );
+				})
+				.blur( function() {
+					self.frame.removeClass( activeStateClass );
+				})
+				.focus();
+		},
+		value: function( editable, form ) {
+			return $( "textarea", form ).val().replace(/\r\n|\r|\n/g, "<br/>");
+		}
+	},
 	select: $.noop,
 	spinner: $.noop 
 };
