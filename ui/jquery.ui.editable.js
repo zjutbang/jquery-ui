@@ -58,10 +58,11 @@ $.widget( "ui.editable", {
 
 	_create: function() {
 		var custom_events = {};
+		// Show placeholder if this.element is empty.
 		if ( !this.value( $.trim( this.element.text() ) ) ) {
-			// Show placeholder if empty
 			this._show();
 		}
+		this._z_index = this.element.css( "z-index" );
 		this._getButtonOptions();
 		this._getEditorOptions();
 		// First bind custom_events, then this._events. Changing that order may cause problems (_start must precede _events[click] when this.options.event is click).
@@ -145,11 +146,19 @@ $.widget( "ui.editable", {
 
 	_show: function() {
 		this._editing = undefined;
+		if ( this._z_index == "auto" ) {
+            // Rolling back element z-index.
+			this.element.css( "z-index", "auto" );
+		}
 		this.element.html( this.value() || this._placeholder() );
 	},
 
 	_edit: function() {
 		this._editing = true;
+		if ( this._z_index == "auto" ) {
+            // Create a new stacking context on element by setting its z-index from auto to 0.
+			this.element.css( "z-index", 0 );
+		}
 		this.element.html( this._form() );
 		this._adjustInputWidth();
 		this._formEvents();

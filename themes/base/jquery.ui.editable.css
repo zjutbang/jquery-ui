@@ -7,13 +7,12 @@
  *
  * http://docs.jquery.com/UI/Tooltip#theming
  */
-.ui-editable { z-index: 3; }
 .ui-editable .ui-widget-content.ui-state-default {background: none !important;}
-.ui-editable-form { position: relative; overflow: hidden; padding: 0; vertical-align: middle; }
+.ui-editable-form { position: relative; overflow: hidden; padding: 0; vertical-align: middle; z-index: 2; }
 .ui-editable-input-area { padding: 0.4em; }
 .ui-editable-placeholder { color: #555; font-style: italic; }
 .ui-editable-input { border: none; display: block; padding: 0; margin: 0;
 outline: none; vertical-align: middle; width:100%; }
 .ui-editable-buttons-area { position: absolute; }
 .ui-editable-save, .ui-editable-cancel { margin: -1px -1px -1px 0; }
-.ui-editable-save:hover, .ui-editable-cancel:hover { z-index: 2; }
+.ui-editable-save:hover, .ui-editable-cancel:hover { z-index: 1; }
