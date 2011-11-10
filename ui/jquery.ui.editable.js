@@ -11,6 +11,7 @@
  *	jquery.ui.core.js
  *	jquery.ui.widget.js
  *	jquery.ui.button.js
+ *	jquery.ui.datepicker.js
  */
 (function( $, undefined ) {
 
@@ -319,7 +320,19 @@ $.ui.editable.editors = {
 		}
 	},
 	select: $.noop,
-	spinner: $.noop 
+	spinner: $.noop,
+	datepicker: {
+		element: function( editable ) {
+			return $.ui.editable.editors.text.element( editable );
+		},
+		bind: function( editable ) {
+			$( "input", editable.element ).datepicker( editable._editorOptions );
+			$.ui.editable.editors.text.bind( editable );
+		},
+		value: function( editable, form ) {
+			return $.ui.editable.editors.text.value( editable, form );
+		}
+	}
 };
 
 $.ui.editable.defaults = {

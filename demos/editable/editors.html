@@ -8,15 +8,18 @@
 	<script src="../../ui/jquery.ui.core.js"></script>
 	<script src="../../ui/jquery.ui.widget.js"></script>
 	<script src="../../ui/jquery.ui.button.js"></script>
+	<script src="../../ui/jquery.ui.datepicker.js"></script>
 	<script src="../../ui/jquery.ui.editable.js"></script>
 	<link rel="stylesheet" href="../demos.css">
 	<style>
 	.demo { display: inline-block; }
+	#datepicker {display: inline-block; }
 	</style>
 	<script>
 	$(function() {
 		$( "#default" ).editable();
 		$( "#textarea" ).editable({
+			// Setting a different editor
 			editor: "textarea",
 			buttons: {
 				save: {
@@ -26,6 +29,16 @@
 					label: "Cancel"
 				}
 			}
+		});
+		$( "#datepicker" ).editable({
+			// Set an editor while passing custom options to it
+			editor: {
+				datepicker: {
+					changeMonth: true,
+					changeYear: true
+				}
+			},
+			placeholder: "Datepicker"
 		});
 
 		$( "#start-all" )
@@ -60,6 +73,10 @@
 
 <p class="sample" id="textarea">
 Textarea
+</p>
+
+<p>
+<span class="sample" id="datepicker"></span>
 </p>
 
 </div><!-- End demo -->
