@@ -11,7 +11,7 @@
 
 	var observable = $.observable.Observable = function ( data ) {
 		this.data = data;
-	}
+	};
 
 	observable.prototype = {
 		data: null,
@@ -29,19 +29,20 @@
 				return object;
 			}
 			while ( fields.length > 1 ) {
-				field = fields.shift(),
+				field = fields.shift();
 				object = object[ field ];
 			}
 			return object[ fields[ 0 ] ];
 		},
 
 		property: function( path, value ) {
+			var oldValues, newValues, oldValue, changed;
 			if ( $.type( path ) === "object" ) {
-				var oldValues = {},
-					newValues = {},
-					changed = false;
+				oldValues = {};
+				newValues = {};
+				changed = false;
 				for ( var key in path ) {
-					var oldValue = this._get( key );
+					oldValue = this._get( key );
 					if (oldValue != path[ key] ) {
 						changed = true;
 						oldValues[ key ] = oldValue;
@@ -54,12 +55,12 @@
 			} else if (arguments.length == 1) {
 				return this._get( path );
 			} else {
-				var oldValue = this._get( path );
+				oldValue = this._get( path );
 				// TODO should be strict? currently helpers are unaware of data types, don't do parsing, therefore strict comparison wouldn't be good
 				if ( oldValue != value ) {
-					var oldValues = {};
+					oldValues = {};
 					oldValues[ path ] = oldValue;
-					var newValues = {};
+					newValues = {};
 					newValues[ path ] = value;
 					return this._property( oldValues, newValues );
 				}
@@ -103,11 +104,10 @@
 		},
 
 		remove: function( index, numToRemove ) {
+			var i, l;
 			if ( $.type( index ) === "array" ) {
 				// TODO there's probably a more efficient way to do this
-				var i,
-					j,
-					l,
+				var j,
 					m,
 					removed = [],
 					toRemove = index;
@@ -132,7 +132,7 @@
 			}
 			if ( $.type( index ) === "object" ) {
 				numToRemove = 1;
-				for ( var i = 0, l = this.data.length; i < l; i++ ) {
+				for ( i = 0, l = this.data.length; i < l; i++ ) {
 					// TODO same as above
 					if ( this.data[ i ] === index) {
 						index = i;
