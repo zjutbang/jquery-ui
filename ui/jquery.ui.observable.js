@@ -28,6 +28,9 @@
 			if ( fields.length === 0 ) {
 				return object;
 			}
+			if ( fields.length === undefined ) {
+				return object[ fields ];
+			}
 			while ( fields.length > 1 ) {
 				field = fields.shift();
 				object = object[ field ];
