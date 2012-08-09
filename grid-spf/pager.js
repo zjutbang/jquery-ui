@@ -15,7 +15,7 @@ $.widget( "spf.pager", {
 	_create: function() {
 		var that = this;
 
-		this._bind( this.options.source, {
+		this._on( this.options.source, {
 			dataviewresponse: "refresh"
 		});
 

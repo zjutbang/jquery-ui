@@ -7,11 +7,10 @@
 		return new observable( data );
 	};
 
-	var splice = [].splice;
-
-	var observable = $.observable.Observable = function ( data ) {
-		this.data = data;
-	};
+	var splice = [].splice,
+		observable = $.observable.Observable = function ( data ) {
+			this.data = data;
+		};
 
 	observable.prototype = {
 		data: null,
@@ -39,12 +38,12 @@
 		},
 
 		property: function( path, value ) {
-			var oldValues, newValues, oldValue, changed;
+			var oldValues, newValues, oldValue, changed, key;
 			if ( $.type( path ) === "object" ) {
 				oldValues = {};
 				newValues = {};
 				changed = false;
-				for ( var key in path ) {
+				for ( key in path ) {
 					oldValue = this._get( key );
 					if (oldValue != path[ key] ) {
 						changed = true;
@@ -55,7 +54,7 @@
 				if ( changed ) {
 					return this._property( oldValues, newValues );
 				}
-			} else if (arguments.length == 1) {
+			} else if ( arguments.length === 1 ) {
 				return this._get( path );
 			} else {
 				oldValue = this._get( path );
@@ -107,13 +106,11 @@
 		},
 
 		remove: function( index, numToRemove ) {
-			var i, l;
+			var i, l, j, m, removed, toRemove, removals;
 			if ( $.type( index ) === "array" ) {
 				// TODO there's probably a more efficient way to do this
-				var j,
-					m,
-					removed = [],
-					toRemove = index;
+				removed = [];
+				toRemove = index;
 				for ( i = 0, l = this.data.length; i < l; i++ ) {
 					for ( j = 0, m = toRemove.length; j < m; j++ ) {
 						// TODO use an equal-method to compare objects, to allow custom matching on primary keys etc.
@@ -126,7 +123,7 @@
 						}
 					}
 				}
-				var removals = 0;
+				removals = 0;
 				for ( i = 0, l = removed.length; i < l; i++ ) {
 					this.data.splice( removed[ i ].index - removals, 1 );
 					removals += 1;

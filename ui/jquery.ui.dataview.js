@@ -66,10 +66,10 @@ $.widget( "ui.dataview", {
 		this._trigger( "request" );
 
 		var request = $.extend( {}, this.options, {
-			page: this.page()
-		});
+				page: this.page()
+			}),
+			that = this;
 
-		var that = this;
 		this.options.source( request, function( data, totalCount ) {
 			that.totalCount = parseInt(totalCount, 10);
 			$.observable( that.result ).replaceAll( data );

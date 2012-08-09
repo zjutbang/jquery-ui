@@ -20,7 +20,7 @@ $.widget( "ui.editor", {
 	},
 	_create: function() {
 		this.inner = this.element.wrapInner( "<div class='editor-wrapper'></div>" ).children();
-		this._bind({
+		this._on({
 			dblclick: function( event ) {
 				if ( this.input.is(":visible") ) {
 					return;
@@ -38,7 +38,7 @@ $.widget( "ui.editor", {
 		}
 		this.inputWrapper.hide().appendTo( this.element );
 
-		this._bind( this.inputWrapper, {
+		this._on( this.inputWrapper, {
 			focusin: function() {
 				clearTimeout( this.timer );
 			},

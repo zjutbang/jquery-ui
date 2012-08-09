@@ -10,7 +10,7 @@ $.widget( "ui.navigator", {
 	_create: function() {
 		this.active = $();
 		this.element.attr( "tabIndex", 0 );
-		this._bind({
+		this._on({
 			focusin: "activate",
 			focusout: "deactivate",
 			keydown: "move",

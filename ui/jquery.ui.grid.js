@@ -48,15 +48,16 @@ $.widget( "ui.grid", {
 	},
 
 	_draw: function() {
-		var totalWidth = 0,
+		var colgroup,
+			totalWidth = 0,
 			colWidths = this.element.find( "tr:first" ).children().map(function() {
 				var width = $( this ).outerWidth();
 				totalWidth += width;
 				return width;
-			});
+			}),
 
-		// Create the grid
-		var uiGrid = ( this.uiGrid = $("<div class='ui-widget ui-grid'></div>") )
+			// Create the grid
+			uiGrid = ( this.uiGrid = $("<div class='ui-widget ui-grid'></div>") )
 				.insertBefore( this.element ),
 
 			// Add grid head and grid body
@@ -93,7 +94,7 @@ $.widget( "ui.grid", {
 			// TODO: Consider adding support for existing COL elements not inside COLGROUP
 			// TODO: ... in the meantime, remove any that might exist
 			uiGridBodyTable.find( "col" ).remove();
-			var colgroup = $( "<colgroup></colgroup>" ).insertBefore( uiGridBodyTable.find("thead") );
+			colgroup = $( "<colgroup></colgroup>" ).insertBefore( uiGridBodyTable.find("thead") );
 			uiGridBodyTable.find( "tr:eq(0)" ).children().each(function(i) {
 				colgroup.append( "<col>" );
 			});
@@ -181,7 +182,7 @@ $.widget( "ui.grid", {
 	},
 
 	refresh: function() {
-		var gridHeight, headHeight, footHeight,
+		var gridHeight, headHeight, footHeight, paddingRight, vertScrollbar,
 			that = this,
 			tbody = this._container().empty();
 
@@ -209,8 +210,7 @@ $.widget( "ui.grid", {
 		}
 
 		// Adjust head and foot in case of visible scrollbar on body to keep columns aligned
-		var paddingRight,
-			vertScrollbar = ( this.uiGridBody[0].scrollHeight !== this.uiGridBody[0].clientHeight );
+		vertScrollbar = ( this.uiGridBody[0].scrollHeight !== this.uiGridBody[0].clientHeight );
 		if ( vertScrollbar ) {
 			paddingRight = this.uiGridBody.width() - this.uiGridBodyTable.outerWidth();
 			this.uiGridHeadAndFoot.css( "padding-right", paddingRight + "px" );
@@ -227,15 +227,14 @@ $.widget( "ui.grid", {
 		var that = this;
 		this._container().children().each(function() {
 			if ( $( this ).data( "grid-item" ) === item ) {
-				// Don't replace here.  Clients may be storing state relative to the element and 
-				// will be surprised if the element is replaced due to, for instance, a property change.
-				$( this ).html( that._newRow( item ) );
+				$( this ).replaceWith( that._newRow( item ) );
 			}
 		});
 		this._trigger( "refresh" );
 	},
 
 	_columns: function() {
+		var head, dataFields, th, property, result;
 		if ( this.options.columns ) {
 			if ( $.type( this.options.columns[0] ) === "string" ) {
 				this.options.columns = $.map( this.options.columns, function( column ) {
@@ -244,7 +243,7 @@ $.widget( "ui.grid", {
 					};
 				});
 			}
-			var head = this.uiGridHeadTable.find( "thead" );
+			head = this.uiGridHeadTable.find( "thead" );
 			if ( !head.find("th").length ) {
 				$.each( this.options.columns, function( index, column ) {
 					$( "<th class='ui-state-default'>" )
@@ -254,10 +253,10 @@ $.widget( "ui.grid", {
 			}
 			return;
 		}
-		var dataFields = this.options.dataFields;
+		dataFields = this.options.dataFields;
 		this.options.columns = this.uiGridHeadTable.find( "th" ).map(function() {
-			var th = $( this );
-			var property = th.data( "property" );
+			th = $( this );
+			property = th.data( "property" );
 			if ( !property ) {
 				// generate property name if missing
 				// replaces whitespace and non-alphanumerics with underscore
@@ -265,7 +264,7 @@ $.widget( "ui.grid", {
 					.toLowerCase()
 					.replace( /\s|[^a-z0-9]/g, "_" );
 			}
-			var result = {
+			result = {
 				property: property,
 				label: th.text()
 			};

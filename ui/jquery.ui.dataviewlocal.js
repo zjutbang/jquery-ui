@@ -14,7 +14,8 @@ $.widget( "ui.dataviewlocal", $.ui.dataview, {
 		input: null
 	},
 	_create: function() {
-		var that = this;
+		var properties,
+			that = this;
 		this.options.source = function( request, response) {
 			var sortedItems = that._sort( that._filter( that.options.input ) );
 			response( that._page( sortedItems ), sortedItems.length );
@@ -26,7 +27,7 @@ $.widget( "ui.dataviewlocal", $.ui.dataview, {
 		}
 		this.properties = {};
 		if ( this.options.properties ) {
-			var properties = this.properties;
+			properties = this.properties;
 			$.each( this.options.properties, function( index, definition ) {
 				properties[ definition.property ] = definition;
 			});
@@ -39,12 +40,12 @@ $.widget( "ui.dataviewlocal", $.ui.dataview, {
 				var property,
 					filter,
 					match = true;
-	            for ( property in that.options.filter ) {
+				for ( property in that.options.filter ) {
 					filter = that.options.filter[ property ];
 					match &= that._match( item[ property ], filter, property );
 				}
 				return match;
-	        });
+			});
 		}
 		return items;
 	},
@@ -53,15 +54,15 @@ $.widget( "ui.dataviewlocal", $.ui.dataview, {
 			operator = filter.operator || (typeof operand === "string" ? "like" : "==");
 		value = this._extract( value, property );
 		switch (operator) {
-            case "==": return value == operand;
-            case "!=": return value != operand;
-            case "<": return value < operand;
-            case "<=": return value <= operand;
-            case ">": return value > operand;
-            case ">=": return value >= operand;
-			case "like": return new RegExp( operand.replace( /[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&" ), "i" ).test( value );
-            default: throw "Unrecognized filter operator: " + operator + " for operand " + operand;
-        }
+			case "==": return value == operand;
+			case "!=": return value != operand;
+			case "<": return value < operand;
+			case "<=": return value <= operand;
+			case ">": return value > operand;
+			case ">=": return value >= operand;
+			case "like": return new RegExp( operand.replace( /[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&" ), "i" ).test( value );
+			default: throw "Unrecognized filter operator: " + operator + " for operand " + operand;
+		}
 	},
 	_extract: function( text, propertyName ) {
 		var property = this.properties[ propertyName ];
@@ -77,7 +78,8 @@ $.widget( "ui.dataviewlocal", $.ui.dataview, {
 		}
 	},
 	_sort: function( items ) {
-		var that = this;
+		var sorts, first,
+			that = this;
 		function sorter( property, secondary ) {
 			var order = 1;
 			if (property.charAt( 0 ) === "-") {
@@ -85,26 +87,27 @@ $.widget( "ui.dataviewlocal", $.ui.dataview, {
 				property = property.slice( 1 );
 			}
 			return function ( item1, item2 ) {
-                var value1 = item1[ property ],
-                    value2 = item2[ property ];
-                if ( value1 === value2 ) {
+				var next,
+					value1 = item1[ property ],
+					value2 = item2[ property ];
+				if ( value1 === value2 ) {
 					if ( secondary.length ) {
-						var next = secondary[ 0 ];
+						next = secondary[ 0 ];
 						return sorter( next, secondary.slice( 1 ) )( item1, item2 );
 					}
 					return 0;
 				}
 				return order * ( that._extract( value1, property ) > that._extract( value2, property ) ? 1 : -1 );
-            };
+			};
 		}
 		if ( this.options.sort.length ) {
 			// if unfiltered, make a copy to not sort the input
 			if ( items === this.options.input ) {
 				items = items.slice( 0 );
 			}
-			var sorts = this.options.sort;
-			var first = sorts[ 0 ];
-        	return items.sort( sorter( first, sorts.slice( 1 ) ) );
+			sorts = this.options.sort;
+			first = sorts[ 0 ];
+			return items.sort( sorter( first, sorts.slice( 1 ) ) );
 		}
 		return items;
 	},

@@ -21,7 +21,7 @@ $.widget( "ui.gridEditor", {
 	_create: function() {
 		var grid = this.element.data("grid");
 
-		this._bind({
+		this._on({
 			dblclick: function( event ) {
 				var that = this;
 				var target = $( event.target ).closest( this.options.items );
