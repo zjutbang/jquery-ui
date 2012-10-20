@@ -3,7 +3,7 @@ $.widget("spf.gridFilter", {
 		var grid = this.grid = this.element.data("grid");
 		var options = grid.options;
 		var source = grid.options.source;
-		this._bind( source, {
+		this._on( source, {
 			dataviewresponse: "_updateFilterValues"
 		});
 
