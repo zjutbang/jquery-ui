@@ -41,6 +41,7 @@ $.widget( "ui.autocomplete", {
 		select: null
 	},
 
+	requestIndex: 0,
 	pending: 0,
 
 	_create: function() {
@@ -103,7 +104,6 @@ $.widget( "ui.autocomplete", {
 					this._keyEvent( "next", event );
 					break;
 				case keyCode.ENTER:
-				case keyCode.NUMPAD_ENTER:
 					// when menu is open and has focus
 					if ( this.menu.active ) {
 						// #6055 - Opera still allows the keypress to occur
@@ -415,24 +415,20 @@ $.widget( "ui.autocomplete", {
 		this.source( { term: value }, this._response() );
 	},
 
-	_response: (function() {
-		var requestIndex = 0;
+	_response: function() {
+		var index = ++this.requestIndex;
 
-		return function() {
-			var index = ++requestIndex;
+		return $.proxy(function( content ) {
+			if ( index === this.requestIndex ) {
+				this.__response( content );
+			}
 
-			return $.proxy(function( content ) {
-				if ( index === requestIndex ) {
-					this.__response( content );
-				}
-
-				this.pending--;
-				if ( !this.pending ) {
-					this.element.removeClass( "ui-autocomplete-loading" );
-				}
-			}, this );
-		};
-	})(),
+			this.pending--;
+			if ( !this.pending ) {
+				this.element.removeClass( "ui-autocomplete-loading" );
+			}
+		}, this );
+	},
 
 	__response: function( content ) {
 		if ( content ) {

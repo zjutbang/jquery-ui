@@ -169,4 +169,50 @@ test( "#5009: scroll not working with parent's position fixed", function() {
 	});
 });
 
+test( "#5727: draggable from iframe" , function() {
+	expect( 2 );
+
+	var iframe = $( "<iframe id='iframe-draggable-container' src='about:blank'></iframe>" ).appendTo( "#qunit-fixture" ),
+		iframeBody = iframe.contents().find( "body" ).append(
+			"<div id='iframe-draggable-1' style='background: green; width: 200px; height: 100px;'>Relative</div>"
+		),
+		draggable1 = iframeBody.find( "#iframe-draggable-1" );
+
+	draggable1.draggable();
+
+	equal( draggable1.closest( iframeBody ).length, 1 );
+
+	TestHelpers.draggable.shouldMove( draggable1 );
+});
+
+test( "#8399: A draggable should become the active element after you are finished interacting with it, but not before.", function() {
+	expect( 2 );
+
+	var element = $( "<a href='#'>link</a>" ).appendTo( "#qunit-fixture" ).draggable();
+
+	$( document ).one( "mousemove", function() {
+		notStrictEqual( document.activeElement, element.get( 0 ), "moving a draggable anchor did not make it the active element" );
+	});
+
+	TestHelpers.draggable.move( element, 50, 50 );
+
+	strictEqual( document.activeElement, element.get( 0 ), "finishing moving a draggable anchor made it the active element" );
+});
+
+asyncTest( "#4261: active element should blur when mousing down on a draggable", function() {
+	expect( 2 );
+
+	var textInput = $( "<input>" ).appendTo( "#qunit-fixture" ),
+		element = $( "#draggable1" ).draggable();
+
+	TestHelpers.onFocus( textInput, function() {
+		strictEqual( document.activeElement, textInput.get( 0 ), "ensure that a focussed text input is the active element before mousing down on a draggable" );
+
+		TestHelpers.draggable.move( element, 50, 50 );
+
+		notStrictEqual( document.activeElement, textInput.get( 0 ), "ensure the text input is no longer the active element after mousing down on a draggable" );
+		start();
+	});
+});
+
 })( jQuery );
