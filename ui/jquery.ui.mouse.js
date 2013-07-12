@@ -11,7 +11,18 @@
  * Depends:
  *	jquery.ui.widget.js
  */
-(function( $, undefined ) {
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		// AMD. Register as an anonymous module.
+		define([
+			"jquery",
+			"./jquery.ui.widget"
+		], factory );
+	} else {
+		// Browser globals
+		factory( jQuery );
+	}
+}(function( $ ) {
 
 var mouseHandled = false;
 $( document ).mouseup( function() {
@@ -174,4 +185,4 @@ $.widget("ui.mouse", {
 	_mouseCapture: function(/* event */) { return true; }
 });
 
-})(jQuery);
+}));

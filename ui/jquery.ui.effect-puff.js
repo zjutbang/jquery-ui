@@ -12,7 +12,19 @@
  *	jquery.ui.effect.js
  *	jquery.ui.effect-scale.js
  */
-(function( $, undefined ) {
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		// AMD. Register as an anonymous module.
+		define([
+			"jquery",
+			"./jquery.ui.effect",
+			"./jquery.ui.effect-scale"
+		], factory );
+	} else {
+		// Browser globals
+		factory( jQuery );
+	}
+}(function( $ ) {
 
 $.effects.effect.puff = function( o, done ) {
 	var elem = $( this ),
@@ -47,4 +59,4 @@ $.effects.effect.puff = function( o, done ) {
 	elem.effect( o );
 };
 
-})(jQuery);
+}));

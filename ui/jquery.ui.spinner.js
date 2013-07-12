@@ -13,7 +13,20 @@
  *  jquery.ui.widget.js
  *  jquery.ui.button.js
  */
-(function( $ ) {
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		// AMD. Register as an anonymous module.
+		define([
+			"jquery",
+			"./jquery.ui.core",
+			"./jquery.ui.widget",
+			"./jquery.ui.button"
+		], factory );
+	} else {
+		// Browser globals
+		factory( jQuery );
+	}
+}(function( $ ) {
 
 function spinner_modifier( fn ) {
 	return function() {
@@ -502,4 +515,4 @@ $.widget( "ui.spinner", {
 	}
 });
 
-}( jQuery ) );
+}));
