@@ -1,6 +1,17 @@
 /* Slovak initialisation for the jQuery UI date picker plugin. */
 /* Written by Vojtech Rinik (vojto@hmm.sk). */
-jQuery(function($){
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		// AMD. Register as an anonymous module.
+		define([
+			"jquery",
+			"../jquery.ui.datepicker"
+		], factory );
+	} else {
+		// Browser globals
+		factory( jQuery );
+	}
+}(function( $ ) {
 	$.datepicker.regional['sk'] = {
 		closeText: 'Zavrieť',
 		prevText: '&#x3C;Predchádzajúci',
@@ -20,4 +31,4 @@ jQuery(function($){
 		showMonthAfterYear: false,
 		yearSuffix: ''};
 	$.datepicker.setDefaults($.datepicker.regional['sk']);
-});
+}));

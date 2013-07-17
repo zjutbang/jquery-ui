@@ -1,6 +1,17 @@
 /* Lithuanian (UTF-8) initialisation for the jQuery UI date picker plugin. */
 /* @author Arturas Paleicikas <arturas@avalon.lt> */
-jQuery(function($){
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		// AMD. Register as an anonymous module.
+		define([
+			"jquery",
+			"../jquery.ui.datepicker"
+		], factory );
+	} else {
+		// Browser globals
+		factory( jQuery );
+	}
+}(function( $ ) {
 	$.datepicker.regional['lt'] = {
 		closeText: 'Uždaryti',
 		prevText: '&#x3C;Atgal',
@@ -20,4 +31,4 @@ jQuery(function($){
 		showMonthAfterYear: true,
 		yearSuffix: ''};
 	$.datepicker.setDefaults($.datepicker.regional['lt']);
-});
+}));

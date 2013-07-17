@@ -1,6 +1,17 @@
 /* Inicialització en català per a l'extensió 'UI date picker' per jQuery. */
 /* Writers: (joan.leon@gmail.com). */
-jQuery(function($){
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		// AMD. Register as an anonymous module.
+		define([
+			"jquery",
+			"../jquery.ui.datepicker"
+		], factory );
+	} else {
+		// Browser globals
+		factory( jQuery );
+	}
+}(function( $ ) {
 	$.datepicker.regional['ca'] = {
 		closeText: 'Tanca',
 		prevText: 'Anterior',
@@ -20,4 +31,4 @@ jQuery(function($){
 		showMonthAfterYear: false,
 		yearSuffix: ''};
 	$.datepicker.setDefaults($.datepicker.regional['ca']);
-});
+}));

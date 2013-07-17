@@ -1,6 +1,17 @@
 /* Khmer initialisation for the jQuery calendar extension. */
 /* Written by Chandara Om (chandara.teacher@gmail.com). */
-jQuery(function($){
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		// AMD. Register as an anonymous module.
+		define([
+			"jquery",
+			"../jquery.ui.datepicker"
+		], factory );
+	} else {
+		// Browser globals
+		factory( jQuery );
+	}
+}(function( $ ) {
 	$.datepicker.regional['km'] = {
 		closeText: 'ធ្វើ​រួច',
 		prevText: 'មុន',
@@ -20,4 +31,4 @@ jQuery(function($){
 		showMonthAfterYear: false,
 		yearSuffix: ''};
 	$.datepicker.setDefaults($.datepicker.regional['km']);
-});
+}));

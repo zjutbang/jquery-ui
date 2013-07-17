@@ -1,6 +1,17 @@
 /* Hebrew initialisation for the UI Datepicker extension. */
 /* Written by Amir Hardon (ahardon at gmail dot com). */
-jQuery(function($){
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		// AMD. Register as an anonymous module.
+		define([
+			"jquery",
+			"../jquery.ui.datepicker"
+		], factory );
+	} else {
+		// Browser globals
+		factory( jQuery );
+	}
+}(function( $ ) {
 	$.datepicker.regional['he'] = {
 		closeText: 'סגור',
 		prevText: '&#x3C;הקודם',
@@ -20,4 +31,4 @@ jQuery(function($){
 		showMonthAfterYear: false,
 		yearSuffix: ''};
 	$.datepicker.setDefaults($.datepicker.regional['he']);
-});
+}));

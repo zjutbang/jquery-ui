@@ -1,6 +1,17 @@
 /* Swiss-French initialisation for the jQuery UI date picker plugin. */
 /* Written Martin Voelkle (martin.voelkle@e-tc.ch). */
-jQuery(function($){
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		// AMD. Register as an anonymous module.
+		define([
+			"jquery",
+			"../jquery.ui.datepicker"
+		], factory );
+	} else {
+		// Browser globals
+		factory( jQuery );
+	}
+}(function( $ ) {
 	$.datepicker.regional['fr-CH'] = {
 		closeText: 'Fermer',
 		prevText: '&#x3C;Préc',
@@ -20,4 +31,4 @@ jQuery(function($){
 		showMonthAfterYear: false,
 		yearSuffix: ''};
 	$.datepicker.setDefaults($.datepicker.regional['fr-CH']);
-});
+}));
