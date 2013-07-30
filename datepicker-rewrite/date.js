@@ -140,15 +140,16 @@ $.date = function( datestring, formatstring ) {
 		},
 		// specialized for multi-month template, could be used in general
 		months: function( add ) {
-			var result = [],
-				current = date.getMonth();
-			for ( var i = 0; i < add + 1; i++ ) {
-				result.push( this.clone() );
-				this.adjust( "M", 1 );
+			var clone,
+				result = [ this ];
+
+			for ( var i = 0; i < add; i++ ) {
+				clone = this.clone();
+				clone.adjust( "M", i + 1 );
+				result.push( clone );
 			}
 			result[ 0 ].first = true;
 			result[ result.length - 1 ].last = true;
-			date.setMonth( current );
 			return result;
 		},
 		iso8601Week: function(date) {

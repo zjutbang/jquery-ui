@@ -292,11 +292,13 @@ $.widget( "ui.datepicker", {
 	},
 	_buildMultiplePicker: function() {
 		var html = "",
-			// TODO: All months returned by months() are the same?
+			currentDate = this.date,
 			months = this.date.months( this.options.numberOfMonths - 1 ),
 			i = 0;
 
 		for ( i; i < months.length; i++ ) {
+			this.date = months[ i ];
+
 			html += "<div class='ui-datepicker-group'>" +
 				"<div class='ui-datepicker-header ui-widget-header ui-helper-clearfix ui-corner-all'>";
 			if ( months[i].first ) {
@@ -306,8 +308,6 @@ $.widget( "ui.datepicker", {
 				html += this._buildNextLink();
 			}
 
-			// TODO: Change _buildTitlebar and _buildGrid to handle for multiple months.
-			// Right now they just use this.date.
 			html += this._buildTitlebar();
 			html += "</div>";
 			html += this._buildGrid();
@@ -317,6 +317,7 @@ $.widget( "ui.datepicker", {
 		html += "<div class='ui-datepicker-row-break'></div>";
 		html += this._buildButtons();
 
+		this.date = currentDate;
 		return html;
 	},
 	_buildHeader: function() {
