@@ -302,16 +302,19 @@ $.widget( "ui.datepicker", {
 			.appendTo( this.picker );
 	},
 	_buildMultiplePicker: function() {
-		var html = "",
+		var headerClass,
+			html = "",
 			currentDate = this.date,
 			months = this.date.months( this.options.numberOfMonths - 1 ),
 			i = 0;
 
 		for ( i; i < months.length; i++ ) {
 			this.date = months[ i ];
+			headerClass = months[ i ].first ? "ui-corner-left" :
+				months[ i ].last ? "ui-corner-right" : "";
 
 			html += "<div class='ui-datepicker-group'>" +
-				"<div class='ui-datepicker-header ui-widget-header ui-helper-clearfix ui-corner-all'>";
+				"<div class='ui-datepicker-header ui-widget-header ui-helper-clearfix " + headerClass + "'>";
 			if ( months[i].first ) {
 				html += this._buildPreviousLink();
 			}
