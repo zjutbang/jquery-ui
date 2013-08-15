@@ -1,7 +1,18 @@
-/*
- * Experimental datepicker rewrite to evaluate jquery-tmpl.
+/*!
+ * jQuery UI Datepicker @VERSION
+ * http://jqueryui.com
  *
- * Based on Marc Grabanski's https://github.com/1Marc/jquery-ui-datepicker-lite
+ * Copyright 2013 jQuery Foundation and other contributors
+ * Released under the MIT license.
+ * http://jquery.org/license
+ *
+ * http://api.jqueryui.com/datepicker/
+ *
+ * Depends:
+ *	jquery.ui.core.js
+ *	jquery.ui.widget.js
+ *	jquery.ui.button.js
+ *	jquery.ui.position.js
  */
 (function( $, undefined ) {
 
