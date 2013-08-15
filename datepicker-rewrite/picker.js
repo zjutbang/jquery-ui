@@ -55,12 +55,12 @@ $.widget( "ui.datepicker", {
 		this._on( this.picker, {
 			"click .ui-datepicker-prev": function( event ) {
 				event.preventDefault();
-				this.date.adjust( "M", -1 );
+				this.date.adjust( "M", -this.options.numberOfMonths );
 				this.refresh();
 			},
 			"click .ui-datepicker-next": function( event ) {
 				event.preventDefault();
-				this.date.adjust( "M", 1 );
+				this.date.adjust( "M", this.options.numberOfMonths );
 				this.refresh();
 			},
 			"click .ui-datepicker-current": function( event ) {
@@ -504,12 +504,24 @@ $.widget( "ui.datepicker", {
 		//TODO: Prevent disabled cells from being focused
 		this.date.refresh();
 
-		$( ".ui-datepicker-title", this.picker ).html( this._buildTitle() );
+		if ( this.options.numberOfMonths === 1 ) {
+			this.grid = $( this._buildGrid() );
+			$( ".ui-datepicker-title", this.picker ).html( this._buildTitle() );
+			$( ".ui-datepicker-calendar", this.picker ).replaceWith( this.grid );
+		} else {
+			this._refreshMultiplePicker();
+		}
+	},
+	_refreshMultiplePicker: function() {
+		var currentDate = this.date,
+			i = 0;
 
-		// TODO fix me
-		var newGrid = $( this._buildGrid() );
-		this.grid = this.grid.replaceWith( newGrid );
-		this.grid = newGrid;
+		for ( ; i < this.options.numberOfMonths; i++ ) {
+			$( ".ui-datepicker-title", this.picker ).eq( i ).html( this._buildTitle() );
+			$( ".ui-datepicker-calendar", this.picker ).eq( i ).html( this._buildGrid() );
+			this.date.adjust( "M", 1 );
+		}
+		this.date.adjust( "M", -this.options.numberOfMonths );
 	},
 	open: function( event ) {
 		if ( this.inline || this.isOpen ) {
