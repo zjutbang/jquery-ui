@@ -79,7 +79,7 @@ TestHelpers.testJshint = function( module ) {
 				dataType: "json"
 			}),
 			$.ajax({
-				url: url("../../../ui/jquery.ui." + module + ".js"),
+				url: url("../../../ui/" + module + ".js"),
 				dataType: "text"
 			})
 		).done(function( hintArgs, srcArgs ) {
