@@ -13,10 +13,10 @@
 		// AMD. Register as an anonymous module.
 		define([
 			"jquery",
-			"./jquery.ui.core",
-			"./jquery.ui.widget",
-			"./jquery.ui.mouse",
-			"./jquery.ui.draggable"
+			"./core",
+			"./widget",
+			"./mouse",
+			"./draggable"
 		], factory );
 	} else {
 		// Browser globals

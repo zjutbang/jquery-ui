@@ -13,8 +13,8 @@
 		// AMD. Register as an anonymous module.
 		define([
 			"jquery",
-			"./jquery.ui.effect",
-			"./jquery.ui.effect-scale"
+			"./effect",
+			"./effect-scale"
 		], factory );
 	} else {
 		// Browser globals
